@@ -15,8 +15,6 @@ public abstract class BaseYverticalAdapter<T> {
         this.mList = list;
     }
 
-    public abstract View initLayout(int layoutId);
-
     public int getCount() {
         return mList == null ? 0 : mList.size();
     }
@@ -25,6 +23,11 @@ public abstract class BaseYverticalAdapter<T> {
 
     }
 
+    public abstract View setLayout(YverticalView yverticalView);
+
+    public View getLayout(YverticalView yverticalView) {
+        return setLayout(yverticalView);
+    }
 
     public class DataCahange implements DataChangedInterface {
 
