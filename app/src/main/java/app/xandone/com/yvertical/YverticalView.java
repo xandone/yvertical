@@ -7,13 +7,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 /**
  * Created by xandone on 2017/6/5.
  */
 
-public class YverticalView extends LinearLayout {
+public class YverticalView extends FrameLayout {
     public static final int STATE_VERTICAL = 0x01;//垂直滚动
     public static final int STATE_HORIZONTAL = 0x02;//水平滚动
     public static final int STATE_NO_SCROLL = 0x03;//停止滚动
@@ -25,6 +25,7 @@ public class YverticalView extends LinearLayout {
     private ValueAnimator mValueAnimator;
     private int mDuration = 2000;
     private float mAnimValue;
+    private LayoutParams layoutParams;
 
     private BaseYverticalAdapter mAdapter;
 
@@ -38,6 +39,10 @@ public class YverticalView extends LinearLayout {
 
     public YverticalView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public void init() {
     }
 
     public void setAdapter(BaseYverticalAdapter baseYverticalAdapter) {
@@ -69,9 +74,11 @@ public class YverticalView extends LinearLayout {
             mCorrentState = STATE_VERTICAL;
             mFirstview = mAdapter.getLayout(this);
             mSecondView = mAdapter.getLayout(this);
+            FrameLayout.LayoutParams layoutParams = (LayoutParams) mSecondView.getLayoutParams();
+            layoutParams.setMargins(0, mHeight, 0, 0);
             addView(mFirstview);
             addView(mSecondView);
-            initAnim();
+            post(animRunnable);
         }
         return this;
     }
@@ -97,12 +104,24 @@ public class YverticalView extends LinearLayout {
     public void scrollAnim() {
         if (mCorrentState == STATE_VERTICAL) {
             Log.d("xandone", "垂直滚动");
-            mFirstview.setY(mAnimValue * mHeight);
+            mFirstview.setY(-mAnimValue * mHeight);
+            mSecondView.setY(mHeight - mAnimValue * mHeight);
         }
     }
 
     public void resetAnim() {
         initAnim();
+    }
+
+    private AnimRunnable animRunnable = new AnimRunnable();
+
+    private class AnimRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            initAnim();
+            postDelayed(animRunnable, mDuration);
+        }
     }
 
     @Override
