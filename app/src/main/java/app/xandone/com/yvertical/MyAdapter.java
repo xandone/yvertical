@@ -3,6 +3,7 @@ package app.xandone.com.yvertical;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -25,4 +26,12 @@ public class MyAdapter extends BaseYverticalAdapter<String> {
         View view = LayoutInflater.from(mContext.getApplicationContext()).inflate(R.layout.item_first_layout, yverticalView, false);
         return view;
     }
+
+    @Override
+    public void bindView(int position, View view) {
+        TextView myTv = (TextView) view.findViewById(R.id.myId);
+        myTv.setText(list.get(position));
+    }
+
+
 }

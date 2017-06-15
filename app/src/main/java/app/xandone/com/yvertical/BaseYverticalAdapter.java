@@ -25,6 +25,8 @@ public abstract class BaseYverticalAdapter<T> {
 
     public abstract View setLayout(YverticalView yverticalView);
 
+    public abstract void bindView(int position, View view);
+
     public View getLayout(YverticalView yverticalView) {
         return setLayout(yverticalView);
     }

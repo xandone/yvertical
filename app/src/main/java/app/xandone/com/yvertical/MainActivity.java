@@ -31,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void init() {
-        list.add("1");
-        list.add("2");
+        list.add("春眠不觉晓");
+        list.add("处处闻帝鸟");
+        list.add("夜来风雨声");
+        list.add("花落知多少");
+        list.add("谁谁谁");
         myAdapter = new MyAdapter(this, list);
         yverticalView.setAdapter(myAdapter);
         yverticalView.startScroll();

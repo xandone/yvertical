@@ -25,7 +25,7 @@ public class YverticalView extends FrameLayout {
     private ValueAnimator mValueAnimator;
     private int mDuration = 2000;
     private float mAnimValue;
-    private LayoutParams layoutParams;
+    private int mPosition = 0;
 
     private BaseYverticalAdapter mAdapter;
 
@@ -43,6 +43,11 @@ public class YverticalView extends FrameLayout {
     }
 
     public void init() {
+        if (mValueAnimator == null) {
+            mValueAnimator = ValueAnimator.ofFloat(0, 1f);
+        }
+        mValueAnimator.setDuration(mDuration);
+        mValueAnimator.setInterpolator(new LinearInterpolator());
     }
 
     public void setAdapter(BaseYverticalAdapter baseYverticalAdapter) {
@@ -78,17 +83,15 @@ public class YverticalView extends FrameLayout {
             layoutParams.setMargins(0, mHeight, 0, 0);
             addView(mFirstview);
             addView(mSecondView);
-            post(animRunnable);
+            initAnim();
+            postDelayed(animRunnable, mDuration);
         }
         return this;
     }
 
     public YverticalView initAnim() {
-        if (mValueAnimator == null) {
-            mValueAnimator = ValueAnimator.ofFloat(0, 1f);
-        }
-        mValueAnimator.setDuration(mDuration);
-        mValueAnimator.setInterpolator(new LinearInterpolator());
+        mAdapter.bindView(mPosition % mAdapter.getCount(), mFirstview);
+        mAdapter.bindView((mPosition + 1) % mAdapter.getCount(), mSecondView);
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -103,7 +106,6 @@ public class YverticalView extends FrameLayout {
 
     public void scrollAnim() {
         if (mCorrentState == STATE_VERTICAL) {
-            Log.d("xandone", "垂直滚动");
             mFirstview.setY(-mAnimValue * mHeight);
             mSecondView.setY(mHeight - mAnimValue * mHeight);
         }
@@ -119,6 +121,8 @@ public class YverticalView extends FrameLayout {
 
         @Override
         public void run() {
+            mPosition++;
+            mValueAnimator.cancel();
             initAnim();
             postDelayed(animRunnable, mDuration);
         }
