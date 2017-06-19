@@ -59,7 +59,7 @@ public class YverticalView extends FrameLayout {
     }
 
     public void stopScroll() {
-
+        mValueAnimator.cancel();
     }
 
     public YverticalView initView() {
